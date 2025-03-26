@@ -10,14 +10,15 @@ ENV PATH="/opt/venv/bin:$PATH" \
     OUTPUTS_DIR="/srv/outputs" \
     IBEAM_GATEWAY_DIR="/srv/clientportal.gw" \
     IBEAM_CHROME_DRIVER_PATH="/usr/bin/chromedriver" \
-    PYTHONPATH="${PYTHONPATH}:/srv:/srv/ibeam"
+    PYTHONPATH="${PYTHONPATH}:/srv:/srv/ibeam" \
+    IBEAM_INPUTS_DIR="/srv/inputs"
 
 COPY requirements.txt /srv/requirements.txt
 
 RUN \
     # Create python virtual environment and required directories
     python -m venv /opt/venv && \
-    mkdir -p /usr/share/man/man1 $OUTPUTS_DIR $IBEAM_GATEWAY_DIR $SRC_ROOT && \
+    mkdir -p /usr/share/man/man1 $OUTPUTS_DIR $IBEAM_GATEWAY_DIR $SRC_ROOT /srv/inputs && \
     # Create basic user
     addgroup --gid $GROUP_ID $GROUP_NAME && \
     adduser --disabled-password --gecos "" --uid $USER_ID --gid $GROUP_ID --shell /bin/bash $USER_NAME && \
@@ -35,20 +36,17 @@ RUN \
 
 COPY copy_cache/clientportal.gw $IBEAM_GATEWAY_DIR
 COPY ibeam $SRC_ROOT
+COPY conf.yaml /srv/inputs/conf.yaml
 
 RUN \
     # Create environment activation script
     echo "/opt/venv/bin/activate" >> $SRC_ROOT/activate.sh && \
     # Update file ownership and permissions
-    chown -R $USER_NAME:$GROUP_NAME $SRC_ROOT $OUTPUTS_DIR $IBEAM_GATEWAY_DIR && \
+    chown -R $USER_NAME:$GROUP_NAME $SRC_ROOT $OUTPUTS_DIR $IBEAM_GATEWAY_DIR /srv/inputs && \
     chmod 744 /opt/venv/bin/activate /srv/ibeam/run.sh $SRC_ROOT/activate.sh    
 
 WORKDIR $SRC_ROOT
 
 USER $USER_NAME
 
-#CMD python ./ibeam_starter.py
-#ENTRYPOINT ["/srv/ibeam/run.sh"]
-#ENTRYPOINT ["bash"]
-#CMD ["/srv/ibeam/run.sh"]
 CMD ["python", "ibeam_starter.py"]
