@@ -5,6 +5,8 @@ listenPort: 5000
 listenSsl: true
 ccp: false
 svcEnvironment: "v1"
+sslCert: "vertx.jks"
+sslPwd: "mywebapi"
 authDelay: 3000
 portalBaseURL: ""
 serverOptions:
@@ -15,7 +17,7 @@ serverOptions:
   internalBlockingPoolSize: 20
 cors:
   origin.allowed: "*"
-  allowCredentials: true
+  allowCredentials: false
 webApps:
   - name: "demo"
     index: "index.html"
@@ -24,8 +26,10 @@ ips:
     - 10.*
     - 192.*
     - 131.216.*
-    - 170.80.241.*
+    - 170.80.241.211
     - 0.0.0.0/0
-    - 172.17.0.*
-    - 127.0.0.1
+    - 170.80.241.210
+    - 170.80.241.*
+    - 172.17.0.* # docker internal
+    - 127.0.0.1 # localhost
   deny:
