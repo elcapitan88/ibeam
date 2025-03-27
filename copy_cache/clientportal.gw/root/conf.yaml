@@ -2,11 +2,9 @@ ip2loc: "US"
 proxyRemoteSsl: true
 proxyRemoteHost: "https://api.ibkr.com"
 listenPort: 5000
-listenSsl: true
+listenSsl: false
 ccp: false
 svcEnvironment: "v1"
-sslCert: "vertx.jks"
-sslPwd: "mywebapi"
 authDelay: 3000
 portalBaseURL: ""
 serverOptions:
@@ -17,7 +15,7 @@ serverOptions:
   internalBlockingPoolSize: 20
 cors:
   origin.allowed: "*"
-  allowCredentials: false
+  allowCredentials: true
 webApps:
   - name: "demo"
     index: "index.html"
@@ -26,11 +24,8 @@ ips:
     - 10.*
     - 192.*
     - 131.216.*
-    - 170.80.241.211
+    - 170.80.241.*
     - 0.0.0.0/0
-    - 172.17.0.* # docker internal
-    - 127.0.0.1 # localhost
-    - x.x.x.x # IP address of your machine used to call the API
+    - 172.17.0.*
+    - 127.0.0.1
   deny:
-    
-    
